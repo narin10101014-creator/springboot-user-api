@@ -29,13 +29,8 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponse  create(@Valid @RequestBody UserRequest req) {
-        User user = new User();
-        user.setUsername(req.getUsername());
-        user.setPassword(req.getPassword());
-        user.setEmail(req.getEmail());
-        user.setRole(req.getRole());
-        User saved = service.create(user);
+    public UserResponse create(@Valid @RequestBody UserRequest req) {
+        User saved = service.create(req);
         return UserMapper.toResponse(saved);
     }
 

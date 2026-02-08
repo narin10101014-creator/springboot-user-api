@@ -1,7 +1,10 @@
 package com.narin.api.user.service;
 
+import com.narin.api.user.dto.UserRequest;
 import com.narin.api.user.entity.User;
 import com.narin.api.user.exception.DuplicateUserException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,15 +20,22 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository repo;
 
+    @Autowired
+    PasswordEncoder encoder;
+
     @Override
-    public User create(User user) {
-        //throw new RuntimeException("Username already exists");
-        if(repo.existsByUsername(user.getUsername())) {
+    public User create(UserRequest req) {
+        User user = new User();
+        if(repo.existsByUsername(req.getUsername())) {
             throw new DuplicateUserException("Username already exists");
         }
-        if (repo.existsByEmail(user.getEmail())) {
+        if (repo.existsByEmail(req.getEmail())) {
             throw new DuplicateUserException("Email already exists");
         }
+        user.setUsername(req.getUsername());
+        user.setPassword(encoder.encode(req.getPassword()));
+        user.setEmail(req.getEmail());
+        user.setRole(req.getRole());
         return repo.save(user);
     }
 
