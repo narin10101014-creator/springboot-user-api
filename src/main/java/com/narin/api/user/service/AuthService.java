@@ -16,9 +16,18 @@ public class AuthService {
     PasswordEncoder encoder;
 
     public void register(User user) {
-        user.setUsername(user.getUsername());
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setRole("USER");
+
+        boolean hasAdmin = userRepository.existsByRole("ROLE_ADMIN");
+        if (!hasAdmin) {
+            user.setUsername("admin");
+            user.setPassword(encoder.encode("admin123"));
+            user.setEmail("admin@test.com");
+            user.setRole("ROLE_ADMIN");
+        }else {
+            user.setUsername(user.getUsername());
+            user.setPassword(encoder.encode(user.getPassword()));
+            user.setRole("ROLE_USER");
+        }
         userRepository.save(user);
     }
     public String login(String username, String password) {
