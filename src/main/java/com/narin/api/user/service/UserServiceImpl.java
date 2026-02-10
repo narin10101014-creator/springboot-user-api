@@ -4,6 +4,8 @@ import com.narin.api.user.dto.UserRequest;
 import com.narin.api.user.entity.User;
 import com.narin.api.user.exception.DuplicateUserException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -64,5 +66,10 @@ public class UserServiceImpl implements UserService{
         User user = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         repo.delete(user);
+    }
+
+    @Override
+    public Page<User> getAll(Pageable pageable) {
+        return repo.findAll(pageable);
     }
 }
