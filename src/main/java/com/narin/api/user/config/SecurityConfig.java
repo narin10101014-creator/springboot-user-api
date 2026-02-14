@@ -25,7 +25,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/users/**").hasRole("ADMIN")
-                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/auth/**", "/swagger-ui/**",
+                            "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().authenticated()
             );
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
